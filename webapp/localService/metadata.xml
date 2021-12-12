@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="CatalogService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="OrdenesCab" EntityType="CatalogService.OrdenesCab"/>
+                <EntitySet Name="OrdenesItems" EntityType="CatalogService.OrdenesItems"/>
+                <EntitySet Name="Productos" EntityType="CatalogService.Productos"/>
+                <EntitySet Name="ProductosSinSerie" EntityType="CatalogService.ProductosSinSerie"/>
+                <EntitySet Name="ProductosConSerie" EntityType="CatalogService.ProductosConSerie"/>
+                <EntitySet Name="ProductosSelect" EntityType="CatalogService.ProductosSelect"/>
+                <AssociationSet Name="OrdenesItems_cab" Association="CatalogService.OrdenesItems_cab">
+                    <End Role="OrdenesItems" EntitySet="OrdenesItems"/>
+                    <End Role="OrdenesCab" EntitySet="OrdenesCab"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="OrdenesCab">
+                <Key>
+                    <PropertyRef Name="idcab"/>
+                </Key>
+                <Property Name="idcab" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="precioTotal" Type="Edm.String"/>
+                <Property Name="creadoPor" Type="Edm.String" MaxLength="12"/>
+                <Property Name="prioridad" Type="Edm.Int32"/>
+                <Property Name="aprobado" Type="Edm.Boolean"/>
+                <NavigationProperty Name="toDetalle" Relationship="CatalogService.OrdenesItems_cab" FromRole="OrdenesCab" ToRole="OrdenesItems"/>
+            </EntityType>
+            <EntityType Name="OrdenesItems">
+                <Key>
+                    <PropertyRef Name="iddet"/>
+                </Key>
+                <Property Name="iddet" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="producto" Type="Edm.String" MaxLength="10"/>
+                <Property Name="descripcion" Type="Edm.String" MaxLength="40"/>
+                <Property Name="precioUnitario" Type="Edm.Decimal" Scale="3" Precision="13"/>
+                <Property Name="cantidad" Type="Edm.Int32"/>
+                <NavigationProperty Name="cab" Relationship="CatalogService.OrdenesItems_cab" FromRole="OrdenesItems" ToRole="OrdenesCab"/>
+                <Property Name="cab_idcab" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Productos">
+                <Key>
+                    <PropertyRef Name="idProducto"/>
+                </Key>
+                <Property Name="idProducto" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="descripcion" Type="Edm.String" MaxLength="40"/>
+                <Property Name="nse" Type="Edm.String" MaxLength="18"/>
+            </EntityType>
+            <EntityType Name="ProductosSinSerie">
+                <Key>
+                    <PropertyRef Name="idProducto"/>
+                </Key>
+                <Property Name="idProducto" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="descripcion" Type="Edm.String" MaxLength="40"/>
+            </EntityType>
+            <EntityType Name="ProductosConSerie">
+                <Key>
+                    <PropertyRef Name="idProducto"/>
+                </Key>
+                <Property Name="idProducto" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="descripcion" Type="Edm.String" MaxLength="40"/>
+                <Property Name="serie" Type="Edm.String" MaxLength="18"/>
+            </EntityType>
+            <EntityType Name="ProductosSelect">
+                <Property Name="descripcion" Type="Edm.String" MaxLength="40"/>
+                <Property Name="serie" Type="Edm.String" MaxLength="18"/>
+            </EntityType>
+            <Association Name="OrdenesItems_cab">
+                <End Role="OrdenesItems" Type="CatalogService.OrdenesItems" Multiplicity="*"/>
+                <End Role="OrdenesCab" Type="CatalogService.OrdenesCab" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="OrdenesCab">
+                        <PropertyRef Name="idcab"/>
+                    </Principal>
+                    <Dependent Role="OrdenesItems">
+                        <PropertyRef Name="cab_idcab"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Annotations Target="CatalogService.OrdenesItems" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="CatalogService.EntityContainer/OrdenesItems" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
